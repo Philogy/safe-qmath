@@ -1,20 +1,29 @@
 {
   "name": "safe-qmath",
-  "version": "1.0.0",
   "description": "Solidity library that provides basic mathematical operations on UQ128.64 fixed point numbers. UQ128.64 numbers are unsigned positive numbers with 128 bits of whole number precision and 64 bits of fractional precision.",
-  "main": "none",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "version": "1.0.0",
+  "files": [
+    "/contracts/SafeQMath.sol",
+    "/src/utils.js"
+  ],
+  "scripts": { },
   "keywords": [
     "solidity",
     "qmath",
     "safemath",
     "math"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MrClottom/safe-qmath.git"
+  },
   "author": "Philippe Dumonet",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "bn.js": "^5.1.3"
+  },
+  "bugs": {
+    "url": "https://github.com/MrClottom/safe-qmath/issues"
+  },
+  "homepage": "https://github.com/MrClottom/safe-qmath/#README.md"
 }
