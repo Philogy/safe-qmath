@@ -6,7 +6,7 @@
     "/contracts/SafeQMath.sol",
     "/src/utils.js"
   ],
-  "scripts": { },
+  "scripts": {},
   "keywords": [
     "solidity",
     "qmath",
@@ -25,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/MrClottom/safe-qmath/issues"
   },
-  "homepage": "https://github.com/MrClottom/safe-qmath/#README.md"
+  "homepage": "https://github.com/MrClottom/safe-qmath/#README.md",
+  "devDependencies": {
+    "@openzeppelin/test-helpers": "^0.5.9"
+  }
 }

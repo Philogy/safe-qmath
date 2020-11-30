@@ -8,24 +8,24 @@ library SafeQMath {
 
     function intToQ(uint256 x) internal pure returns (uint192) {
         require(x <= type(uint128).max, 'SafeQMath: conversion overflow');
-        return uint192(x << 64);
+        return uint192(x * ONE);
     }
 
     function qToIntLossy(uint192 x) internal pure returns (uint256) {
-        return uint256(x >> 64);
+        return uint256(x / ONE);
     }
 
     function qToInt(uint192 x) internal pure returns (uint256) {
         require(uint64(x) == 0, 'SafeQMath: truncating decimals');
-        return uint256(x >> 64);
+        return uint256(x / ONE);
     }
 
     function qfloor(uint192 x) internal pure returns (uint192) {
-        return x >> 64 << 64;
+        return x / ONE * ONE;
     }
 
     function qceil(uint192 x) internal pure returns (uint192) {
-        return uint64(x) > 0 ? qadd(qfloor(x), 1 << 64) : x;
+        return uint64(x) > 0 ? qadd(qfloor(x), ONE) : x;
     }
 
     function qadd(uint192 x, uint192 y) internal pure returns (uint192) {
@@ -49,12 +49,12 @@ library SafeQMath {
             res / uint256(x) == uint256(y),
             'SafeQMath: multiplication overflow'
         );
-        return uint192(res >> 64);
+        return uint192(res / ONE);
     }
 
     function qdiv(uint192 x, uint192 y) internal pure returns (uint192) {
         require(y > 0, 'SafeQMath: Divisor 0');
-        uint256 z = (uint256(x) << 64) / uint256(y);
+        uint256 z = (uint256(x) * uint256(ONE)) / uint256(y);
         require(z <= type(uint192).max,  'SafeQMath: divison overflow');
         return uint192(z);
     }
