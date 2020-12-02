@@ -15,20 +15,20 @@ contract('SafeQMathMock', () => {
   })
 
   describe('contract conversions', () => {
-    it('converts uint256 to uint192 UQInt correctly', async () => {
+    it('converts uint256 to UQInt correctly', async () => {
       const x = new BN('123')
       const convertedX = await this.safeQMath.intToQ(x)
 
       expect(convertedX).to.be.bignumber.equal(x.mul(ONE))
     })
 
-    it('reverts when uint to convert cannot fit into UQInt', async () => {
+    it('reverts when uint256 to convert cannot fit into UQInt', async () => {
       const x = MAX_CONVERTIBLE_UINT256.add(new BN('1'))
 
       await expectRevert(this.safeQMath.intToQ(x), 'SafeQMath: conversion overflow')
     })
 
-    it('lossy converts UQInt to uint with correctly', async () => {
+    it('lossy converts UQInt to uint256 with correctly', async () => {
       const x = convertFloatToUQInt(12.3456)
       const convertedX = await this.safeQMath.qToIntLossy(x)
 
@@ -40,7 +40,7 @@ contract('SafeQMathMock', () => {
       expect(convertedY).to.be.bignumber.equal(new BN('12'))
     })
 
-    it('converts UQInt to uint without loss correctly', async () => {
+    it('converts UQInt to uint256 without loss correctly', async () => {
       const x = convertFloatToUQInt(12)
       const convertedX = await this.safeQMath.qToInt(x)
 
