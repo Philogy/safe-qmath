@@ -54,6 +54,38 @@ contract('SafeQMathMock', () => {
     })
   })
 
+  describe('floor', () => {
+    it('applies floor correctly', async () => {
+      const x = convertFloatToUQInt(123.99997)
+      const flooredX = await this.safeQMath.qfloor(x)
+
+      expect(flooredX).to.be.bignumber.equal(convertFloatToUQInt(123))
+    })
+
+    it('floors already floored number correctly', async () => {
+      const x = convertFloatToUQInt(123)
+      const flooredX = await this.safeQMath.qfloor(x)
+
+      expect(flooredX).to.be.bignumber.equal(x)
+    })
+  })
+
+  describe('ceil', () => {
+    it('applies ceil correctly', async () => {
+      const x = convertFloatToUQInt(123.99997)
+      const ceiledX = await this.safeQMath.qceil(x)
+
+      expect(ceiledX).to.be.bignumber.equal(convertFloatToUQInt(124))
+    })
+
+    it('ceils already ceiled number correctly', async () => {
+      const x = convertFloatToUQInt(123)
+      const ceiledX = await this.safeQMath.qceil(x)
+
+      expect(ceiledX).to.be.bignumber.equal(x)
+    })
+  })
+
   const testUQ = async (fn, x, y, expectedRes) => {
     const a = convertFloatToUQInt(x)
     const b = convertFloatToUQInt(y)
@@ -102,6 +134,11 @@ contract('SafeQMathMock', () => {
     await testUQ(fn, y, x, expectedRes)
   }
 
+  const testCommutativeFail = async (fn, x, y, reason) => {
+    await expectRevert(fn(x, y), reason)
+    await expectRevert(fn(y, x), reason)
+  }
+
   const testFailCommutativeUQ = async (fn, x, y, reason) => {
     await testFailUQ(fn, x, y, reason)
     await testFailUQ(fn, y, x, reason)
@@ -125,10 +162,42 @@ contract('SafeQMathMock', () => {
     it('reverts on multiplication overflow', async () => {
       const x = MAX_UQINT
       const y = convertFloatToUQInt(1.00001)
-      const revertReason = 'SafeQMath: multiplic. overflow'
 
-      await expectRevert(this.safeQMath.qmul(x, y), revertReason)
-      await expectRevert(this.safeQMath.qmul(y, x), revertReason)
+      await testCommutativeFail(this.safeQMath.qmul, x, y, 'SafeQMath: multiplic. overflow')
     })
   })
+
+  describe('addition', () => {
+    it('adds correctly', async () => {
+      const x = 123.45
+      const y = 6789.1011
+
+      await testCommutativeUQ(this.safeQMath.qadd, x, y, x + y)
+    })
+
+    it('reverts on addition overflow', async () => {
+      const x = MAX_UQINT
+      const y = new BN('1')
+
+      await testCommutativeFail(this.safeQMath.qadd, x, y, 'SafeQMath: addition overflow')
+    })
+  })
+
+  describe('subtraction', () => {
+    it('subtracts correctly', async () => {
+      const x = 6789.1011
+      const y = 123.45
+
+      await testUQ(this.safeQMath.qsub, x, y, x - y)
+    })
+
+    it('reverts on subtraction underflow', async () => {
+      const x = new BN('0')
+      const y = new BN('1')
+
+      await testFailUQ(this.safeQMath.qsub, x, y, 'SafeQMath: subtraction underflow')
+    })
+  })
+
+  //describe('exponentiation', async () => {})
 })
