@@ -35,7 +35,7 @@ library SafeQMath {
     }
 
     function qsub(uint192 x, uint192 y) internal pure returns (uint192) {
-        require(x >= y, 'SafeQMath: subtraction overflow');
+        require(x >= y, 'SafeQMath: subtraction underflow');
         return x - y;
     }
 
@@ -47,7 +47,7 @@ library SafeQMath {
         uint256 res = uint256(x) * uint256(y);
         require(
             res / uint256(x) == uint256(y),
-            'SafeQMath: multiplication overflow'
+            'SafeQMath: multiplic. overflow'
         );
         return uint192(res / ONE);
     }
@@ -55,7 +55,21 @@ library SafeQMath {
     function qdiv(uint192 x, uint192 y) internal pure returns (uint192) {
         require(y > 0, 'SafeQMath: Divisor 0');
         uint256 z = (uint256(x) * uint256(ONE)) / uint256(y);
-        require(z <= type(uint192).max,  'SafeQMath: divison overflow');
+        require(z <= type(uint192).max,  'SafeQMath: division overflow');
         return uint192(z);
+    }
+
+    function pow(uint192 base, uint256 exp) internal pure returns (uint192 res) {
+        res = ONE;
+
+        while (exp  > 0) {
+            if (exp & 1 == 1) {
+                res = qmul(res, base);
+            }
+            base = qmul(base, base);
+            exp /= 2;
+        }
+
+        return res;
     }
 }
