@@ -78,6 +78,10 @@ contract('SafeQMathMock', () => {
       expect(ceiledX).to.be.bignumber.equal(convertFloatToUQInt(124))
     })
 
+    it('reverts on ceil overflow', async () => {
+      await expectRevert(this.safeQMath.qceil(MAX_UQINT), 'SafeQMath: ceil overflow')
+    })
+
     it('ceils already ceiled number correctly', async () => {
       const x = convertFloatToUQInt(123)
       const ceiledX = await this.safeQMath.qceil(x)

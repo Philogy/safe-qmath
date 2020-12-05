@@ -28,12 +28,20 @@ library SafeQMath {
     }
 
     function qceil(uint192 x) internal pure returns (uint192) {
-        return uint64(x) > 0 ? qadd(qfloor(x), ONE) : x;
+        return uint64(x) > 0 ? qadd(qfloor(x), ONE, 'SafeQMath: ceil overflow') : x;
     }
 
     function qadd(uint192 x, uint192 y) internal pure returns (uint192) {
+        return qadd(x, y, 'SafeQMath: addition overflow');
+    }
+
+    function qadd(uint192 x, uint192 y, string memory errorMsg)
+        internal
+        pure
+        returns (uint192)
+    {
         uint192 z = x + y;
-        require(z >= x, 'SafeQMath: addition overflow');
+        require(z >= x, errorMsg);
         return z;
     }
 
