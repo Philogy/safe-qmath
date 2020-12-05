@@ -46,4 +46,8 @@ contract SafeQMathMock {
     function qdiv(uint192 x, uint192 y) external pure returns (uint192) {
         return x.qdiv(y);
     }
+
+    function qpow(uint192 b, uint256 e) external pure returns (uint192) {
+        return b.qpow(e);
+    }
 }

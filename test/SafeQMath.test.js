@@ -2,7 +2,7 @@ const { expectRevert, BN } = require('@openzeppelin/test-helpers')
 const {
   convertUQIntToFloat,
   convertFloatToUQInt,
-  constants: { MAX_UQINT, ONE, MAX_CONVERTIBLE_UINT256 }
+  constants: { MAX_UQINT, ONE, MAX_CONVERTIBLE_UINT256, ALLOWED_ERROR }
 } = require('../utils')
 
 const SafeQMathMock = artifacts.require('SafeQMathMock')
@@ -199,5 +199,25 @@ contract('SafeQMathMock', () => {
     })
   })
 
-  //describe('exponentiation', async () => {})
+  describe('exponentiation', () => {
+    it('exponentiates correctly within certain error', async () => {
+      const base = 1.0000000234
+      const exp = 56789100
+
+      const res = await this.safeQMath.qpow(convertFloatToUQInt(base), new BN(exp))
+      const expectedRes = convertFloatToUQInt(Math.pow(base, exp))
+
+      const errorPrec = new BN('10').pow(ALLOWED_ERROR.decimals)
+      const error = errorPrec.sub(res.mul(errorPrec).div(expectedRes)).abs()
+
+      expect(error).to.be.bignumber.at.most(ALLOWED_ERROR.err)
+    })
+
+    it('reverts on exponentiaion overflow', async () => {
+      const base = new BN('1').shln(47).mul(ONE)
+      const exp = new BN('3')
+
+      await expectRevert(this.safeQMath.qpow(base, exp), 'SafeQMath: exp. overflow')
+    })
+  })
 })

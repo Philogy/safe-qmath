@@ -5,7 +5,11 @@ const constants = {
   MAX_CONVERTIBLE_UINT256: new BN('1').shln(128).sub(new BN('1')),
   ONE: new BN('1').shln(64),
   UQINT_BYTES: 24,
-  UQINT_FRACTIONAL_BYTES: 8
+  UQINT_FRACTIONAL_BYTES: 8,
+  ALLOWED_ERROR: {
+    err: new BN('10000'),
+    decimals: new BN('15')
+  }
 }
 
 // converts a javascript float into a BN representing the
