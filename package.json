@@ -1,12 +1,14 @@
 {
   "name": "safe-qmath",
   "description": "Solidity library that provides basic mathematical operations on UQ128.64 fixed point numbers. UQ128.64 numbers are unsigned positive numbers with 128 bits of whole number precision and 64 bits of fractional precision.",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "files": [
     "/contracts/SafeQMath.sol",
     "/utils/**"
   ],
-  "scripts": {},
+  "scripts": {
+    "test": "npx truffle test"
+  },
   "keywords": [
     "solidity",
     "qmath",
@@ -27,6 +29,8 @@
   },
   "homepage": "https://github.com/MrClottom/safe-qmath/#README.md",
   "devDependencies": {
-    "@openzeppelin/test-helpers": "^0.5.9"
+    "@openzeppelin/test-helpers": "^0.5.9",
+    "eslint": "^7.16.0",
+    "eslint-plugin-prettier": "^3.3.0"
   }
 }

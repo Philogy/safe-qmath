@@ -2,7 +2,8 @@ const { expectRevert, BN } = require('@openzeppelin/test-helpers')
 const {
   convertUQIntToFloat,
   convertFloatToUQInt,
-  constants: { MAX_UQINT, ONE, MAX_CONVERTIBLE_UINT256, ALLOWED_ERROR }
+  constants: { MAX_UQINT, ONE, MAX_CONVERTIBLE_UINT256 },
+  withinError
 } = require('../utils')
 
 const SafeQMathMock = artifacts.require('SafeQMathMock')
@@ -211,10 +212,7 @@ contract('SafeQMathMock', () => {
       const res = await this.safeQMath.qpow(convertFloatToUQInt(base), new BN(exp))
       const expectedRes = convertFloatToUQInt(Math.pow(base, exp))
 
-      const errorPrec = new BN('10').pow(ALLOWED_ERROR.decimals)
-      const error = errorPrec.sub(res.mul(errorPrec).div(expectedRes)).abs()
-
-      expect(error).to.be.bignumber.at.most(ALLOWED_ERROR.err)
+      expect(withinError(res, expectedRes)).to.be.true
     })
 
     it('reverts on exponentiaion overflow', async () => {

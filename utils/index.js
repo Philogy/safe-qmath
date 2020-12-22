@@ -33,4 +33,12 @@ const round = (num, places = 2) => {
   return +`${roundedPreShift}e-${places}`
 }
 
-module.exports = { convertFloatToUQInt, convertUQIntToFloat, round, constants }
+const withinError = (x, y) => {
+  const scale = new BN('10').pow(constants.ALLOWED_ERROR.decimals)
+  const scaledX = x.mul(scale)
+  const scaledError = scaledX.div(y).sub(scale)
+
+  return scaledError.abs().lt(constants.ALLOWED_ERROR.err)
+}
+
+module.exports = { convertFloatToUQInt, convertUQIntToFloat, round, constants, withinError }
